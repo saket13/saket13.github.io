@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — Saket Saumya</title>
+    <meta name="description" content="Blog posts by Saket Saumya on engineering, systems design, and tech.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            var t = localStorage.getItem('theme');
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="container">
+        <a href="index.html" class="nav-logo"><span>~/</span>saket13</a>
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="resume.html">Resume</a></li>
+                <li><a href="blog.html" class="active">Blog</a></li>
+                <li><a href="coursework.html">Coursework</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Blog -->
+<section class="section" id="blog">
+    <div class="container">
+        <div class="section-header">Blog</div>
+        <div class="blog-empty">
+            <p>Posts coming soon.</p>
+            <p class="terminal-text">$ echo "stay tuned" >> /dev/blog</p>
+        </div>
+        <!--
+        Template for blog posts — uncomment and duplicate as needed:
+
+        <div class="blog-grid">
+            <a href="/blog/post-slug.html" class="blog-card">
+                <div class="blog-date">2026-07-05</div>
+                <div class="blog-title">Your Blog Post Title Here</div>
+                <div class="blog-excerpt">A brief 1-2 line description of what this post is about...</div>
+                <div class="blog-tags">
+                    <span class="tech-tag">distributed-systems</span>
+                    <span class="tech-tag">java</span>
+                </div>
+            </a>
+        </div>
+        -->
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p style="margin-bottom: 8px;">
+            <a href="mailto:saket.iiit@gmail.com">Email</a> &nbsp;&middot;&nbsp;
+            <a href="https://linkedin.com/in/saket13" target="_blank">LinkedIn</a> &nbsp;&middot;&nbsp;
+            <a href="https://github.com/saket13" target="_blank">GitHub</a> &nbsp;&middot;&nbsp;
+            <a href="https://calendly.com/saket13" target="_blank">Calendar</a> &nbsp;&middot;&nbsp;
+            <a href="https://topmate.io/saket13" target="_blank">1:1</a>
+        </p>
+        <p>&copy; 2026 Saket Saumya</p>
+    </div>
+</footer>
+
+<script>
+    function getPreferredTheme() {
+        const stored = localStorage.getItem('theme');
+        if (stored) return stored;
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+    }
+    applyTheme(getPreferredTheme());
+</script>
+
+</body>
+</html>
