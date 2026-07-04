@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume — Saket Saumya</title>
+    <meta name="description" content="Resume of Saket Saumya — Backend Engineer with 4+ years of experience.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            var t = localStorage.getItem('theme');
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="container">
+        <a href="index.html" class="nav-logo"><span>~/</span>saket13</a>
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="resume.html" class="active">Resume</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="coursework.html">Coursework</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Experience -->
+<section class="section" id="experience">
+    <div class="container">
+        <div class="section-header">Experience</div>
+
+        <!-- PhonePe -->
+        <div class="exp-card">
+            <div class="exp-header">
+                <div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=phonepe.com&sz=64" alt="PhonePe" class="company-icon">
+                        <div class="exp-company"><a href="https://www.phonepe.com/" target="_blank">PhonePe</a></div>
+                    </div>
+                    <div class="exp-role">Software Engineer 2</div>
+                    <div class="exp-location">Bangalore, India</div>
+                </div>
+                <div class="exp-date">Jun 2023 — Present</div>
+            </div>
+            <div class="exp-tech">
+                <span class="tech-tag">Java</span>
+                <span class="tech-tag">Dropwizard</span>
+                <span class="tech-tag">MariaDB</span>
+                <span class="tech-tag">Aerospike</span>
+                <span class="tech-tag">RabbitMQ</span>
+                <span class="tech-tag">HBase</span>
+                <span class="tech-tag">Kafka</span>
+            </div>
+            <ul class="exp-bullets">
+                <li><b>Visana Split:</b> Split PhonePe's <strong>2nd</strong> largest monolith into category-specific microservices, routing app and cross-DC ingress traffic to new services with zero-downtime canary rollout (CUG → <strong>10%</strong> → <strong>50%</strong> → <strong>100%</strong>). <strong>Zero</strong> production bugs, reduced deployment pipeline time by <strong>43%</strong> and eliminated cross-category release conflicts (<strong>5-6</strong> incidents/month → <strong>0</strong>).</li>
+                <li><b>ULIP:</b> Leading a team of <strong>3</strong> in E2E backend development of PhonePe's ULIP product targeting <strong>30M+ MAU</strong> (<strong>&#8377;10Cr+</strong> business). Designed HLD/LLD approved by Architect, driving insurer API integrations across pre-to-post payment lifecycle.</li>
+                <li><b>Janus V2:</b> Engineered a configurable workflow orchestration framework with pre-filling, journey resumability and simulations. Serves <strong>10M+</strong> workflows/day at <strong>P99 &lt; 250ms</strong>, adopted across <strong>2</strong> BUs and <strong>6+</strong> pods, powering <strong>15+</strong> journeys.</li>
+                <li><b>Stored Mandates:</b> Executed a cross-cluster MariaDB migration of <strong>600k+</strong> policy mandates, implementing phased dual-write with feature-flagged traffic rollout and row-level checksum validation. Developed mandate lifecycle APIs for Health/Life categories, powering the Collection Engine for at-scale mandate processing.</li>
+                <li><b>Product Feature Launches:</b> Boosted Life Insurance payments by <strong>20%</strong> and average monthly ticket size from <strong>&#8377;1150</strong> to <strong>&#8377;1320</strong> via Limited Pay feature, onboarding <strong>7</strong> insurers across <strong>5</strong> plans. Built Life status tracking, surfacing real-time policy lifecycle updates across <strong>6</strong> insurers, app, agent console, and ops dashboards.</li>
+                <li><b>Open Source:</b> Contributed a <a href="https://github.com/santanusinha/dropwizard-db-sharding-bundle/pull/135" target="_blank">session-reuse mechanism</a> to PhonePe's open-source DB sharding bundle, eliminating premature DB session closure for transactions — adopted across <strong>25+</strong> teams at PhonePe.</li>
+            </ul>
+        </div>
+
+        <!-- Healthify -->
+        <div class="exp-card">
+            <div class="exp-header">
+                <div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=healthifyme.com&sz=64" alt="Healthify" class="company-icon">
+                        <div class="exp-company"><a href="https://www.healthifyme.com/" target="_blank">Healthify</a></div>
+                    </div>
+                    <div class="exp-role">Associate Software Engineer</div>
+                    <div class="exp-location">Bangalore, India</div>
+                </div>
+                <div class="exp-date">Jun 2022 — Apr 2023</div>
+            </div>
+            <ul class="exp-bullets">
+                <li>Eliminated <strong>P0 4xx</strong> production outages in automated chat system by designing a RabbitMQ backed Golang event processor for rate limited processing. Improved tail-latency <strong>P98-P99</strong> of <strong>7k+ TPS</strong> legacy MySQL transactions by optimizing indexing, query planning and batching to reduce network RTTs.</li>
+                <li>Reduced Customer Delight team chat volume by <strong>25%</strong> by building a Django based Infra to manage <strong>250k+</strong> premium plan subscriptions and launching in-app features like coach change and plan pause/resume.</li>
+            </ul>
+        </div>
+
+        <div class="section-header" style="margin-top: 36px;">Internships &amp; Contributions</div>
+
+        <!-- Paytm -->
+        <div class="exp-card">
+            <div class="exp-header">
+                <div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=paytm.com&sz=64" alt="Paytm" class="company-icon">
+                        <div class="exp-company"><a href="https://www.paytm.com/" target="_blank">Paytm</a></div>
+                    </div>
+                    <div class="exp-role">Software Engineer Intern</div>
+                    <div class="exp-location">Noida, India</div>
+                </div>
+                <div class="exp-date">Jan 2022 — Jun 2022</div>
+            </div>
+            <ul class="exp-bullets">
+                <li>Led design and development of a dynamic feature flag in Java and Spring for Payments, eliminating mandatory login and reduced payment completion time by over <strong>60%</strong>. Implemented event-driven Kafka APIs handling <strong>20M+</strong> online/offline merchant communication channels.</li>
+            </ul>
+        </div>
+
+        <!-- Houzen -->
+        <div class="exp-card">
+            <div class="exp-header">
+                <div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=houzen.co.uk&sz=64" alt="houzen" class="company-icon" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23222%22/><text x=%2216%22 y=%2221%22 text-anchor=%22middle%22 fill=%22%2322c55e%22 font-family=%22Inter%22 font-size=%2216%22 font-weight=%22600%22>h</text></svg>'">
+                        <div class="exp-company"><a href="https://www.linkedin.com/company/houzen/" target="_blank">houzen</a></div>
+                    </div>
+                    <div class="exp-role">Technology Consultant (Promoted from Intern)</div>
+                    <div class="exp-location">London, UK — Remote</div>
+                </div>
+                <div class="exp-date">Apr 2021 — Jun 2022</div>
+            </div>
+            <ul class="exp-bullets">
+                <li>Decoupled services using Pub/Sub pattern with Python, Redis and Kinesis. The system was able to asynchronously valuate <strong>3M+</strong> Real Estate properties in bulk.</li>
+                <li>Saved <strong>&pound;50k</strong> in third-party licensing fees by building an in-house tool rating millions of Central London properties using neighborhood health indicator scores. Improved CI/CD pipelines and AWS Infrastructure, reducing developers on-boarding time from <strong>1 day</strong> to <strong>30 mins</strong> and accelerating feature release by <strong>60%</strong> through 1-click deployments.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Skills -->
+<section class="section" id="skills">
+    <div class="container">
+        <div class="section-header">Skills</div>
+        <div class="skills-grid">
+            <div class="skill-row">
+                <span class="skill-label">Languages</span>
+                <span class="skill-value">Java (Dropwizard), Python (Django/Flask/FastAPI), C/C++, SQL</span>
+            </div>
+            <div class="skill-row">
+                <span class="skill-label">Databases</span>
+                <span class="skill-value">MySQL, Aerospike, HBase, Redis, Elastic Search, BigQuery, MongoDB</span>
+            </div>
+            <div class="skill-row">
+                <span class="skill-label">Cloud / DevOps</span>
+                <span class="skill-value">AWS, Docker, Kafka, CloudAMQP, Grafana/New Relic, Sentry</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Competitive Programming -->
+<section class="section" id="cp">
+    <div class="container">
+        <div class="section-header">Competitive Programming</div>
+        <ul class="achievement-list">
+            <li>Solved <strong>1200+</strong> problems on CP Platforms —
+                <a href="https://leetcode.com/saket13/" target="_blank">LeetCode</a>,
+                <a href="https://www.codechef.com/users/saket13" target="_blank">CodeChef</a>,
+                <a href="https://www.hackerearth.com/@saket_13" target="_blank">HackerEarth</a>
+            </li>
+            <li>Finished <strong>259th</strong> out of <strong>10,000+</strong> participants in June'19 Long (CodeChef)</li>
+            <li>Finished <strong>290th</strong> out of <strong>7,000+</strong> participants in May'20 Circuits (HackerEarth)</li>
+            <li>Secured <strong>95.48</strong> percentile out of <strong>0.1 million</strong> candidates in <a href="https://gate.iitb.ac.in/" target="_blank">GATE 2021 (CS/IT)</a></li>
+            <li>Secured <strong>98.53</strong> percentile out of <strong>1.3 million</strong> candidates in <a href="https://jeemain.nta.nic.in/" target="_blank">JEE Mains 2017</a></li>
+        </ul>
+    </div>
+</section>
+
+<!-- Education -->
+<section class="section" id="education">
+    <div class="container">
+        <div class="section-header">Education</div>
+        <div class="edu-card">
+            <div class="edu-header">
+                <div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=iiitm.ac.in&sz=64" alt="IIIT Gwalior" class="company-icon round" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%2216%22 fill=%22%23222%22/><text x=%2216%22 y=%2221%22 text-anchor=%22middle%22 fill=%22%2322c55e%22 font-family=%22Inter%22 font-size=%2213%22 font-weight=%22600%22>IIIT</text></svg>'">
+                        <div class="edu-school"><a href="http://www.iiitm.ac.in" target="_blank">Indian Institute of Information Technology, Gwalior</a></div>
+                    </div>
+                    <div class="edu-degree">Integrated Post Graduation (B.Tech + M.Tech) in Information Technology — CGPA: 8/10</div>
+                </div>
+                <div class="edu-date">Jul 2017 — May 2022</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p style="margin-bottom: 8px;">
+            <a href="mailto:saket.iiit@gmail.com">Email</a> &nbsp;&middot;&nbsp;
+            <a href="https://linkedin.com/in/saket13" target="_blank">LinkedIn</a> &nbsp;&middot;&nbsp;
+            <a href="https://github.com/saket13" target="_blank">GitHub</a> &nbsp;&middot;&nbsp;
+            <a href="https://calendly.com/saket13" target="_blank">Calendar</a> &nbsp;&middot;&nbsp;
+            <a href="https://topmate.io/saket13" target="_blank">1:1</a>
+        </p>
+        <p>&copy; 2026 Saket Saumya</p>
+    </div>
+</footer>
+
+<script>
+    function getPreferredTheme() {
+        const stored = localStorage.getItem('theme');
+        if (stored) return stored;
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+    }
+    applyTheme(getPreferredTheme());
+</script>
+
+</body>
+</html>
