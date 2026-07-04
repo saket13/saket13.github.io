@@ -302,6 +302,32 @@
             gap: 8px;
         }
 
+        .exp-company-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .company-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: contain;
+            background: var(--tag-bg);
+            padding: 4px;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        [data-theme="light"] .company-icon {
+            background: #f3f4f6;
+            border-color: #e0e0e0;
+        }
+
+        .company-icon.round {
+            border-radius: 50%;
+        }
+
         .exp-company {
             font-size: 18px;
             font-weight: 600;
@@ -667,10 +693,10 @@
         <a href="#" class="nav-logo"><span>~/</span>saket13</a>
         <div class="nav-right">
             <ul class="nav-links">
-                <li><a href="#experience" class="active">Experience</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#education">Education</a></li>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="resume.html">Resume</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="coursework.html">Coursework</a></li>
             </ul>
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                 <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -722,7 +748,10 @@
         <div class="exp-card">
             <div class="exp-header">
                 <div>
-                    <div class="exp-company"><a href="https://www.phonepe.com/" target="_blank">PhonePe</a></div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=phonepe.com&sz=64" alt="PhonePe" class="company-icon">
+                        <div class="exp-company"><a href="https://www.phonepe.com/" target="_blank">PhonePe</a></div>
+                    </div>
                     <div class="exp-role">Software Engineer 2</div>
                     <div class="exp-location">Bangalore, India</div>
                 </div>
@@ -751,7 +780,10 @@
         <div class="exp-card">
             <div class="exp-header">
                 <div>
-                    <div class="exp-company"><a href="https://www.healthifyme.com/" target="_blank">Healthify</a></div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=healthifyme.com&sz=64" alt="Healthify" class="company-icon">
+                        <div class="exp-company"><a href="https://www.healthifyme.com/" target="_blank">Healthify</a></div>
+                    </div>
                     <div class="exp-role">Associate Software Engineer</div>
                     <div class="exp-location">Bangalore, India</div>
                 </div>
@@ -769,7 +801,10 @@
         <div class="exp-card">
             <div class="exp-header">
                 <div>
-                    <div class="exp-company"><a href="https://www.paytm.com/" target="_blank">Paytm</a></div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=paytm.com&sz=64" alt="Paytm" class="company-icon">
+                        <div class="exp-company"><a href="https://www.paytm.com/" target="_blank">Paytm</a></div>
+                    </div>
                     <div class="exp-role">Software Engineer Intern</div>
                     <div class="exp-location">Noida, India</div>
                 </div>
@@ -784,7 +819,10 @@
         <div class="exp-card">
             <div class="exp-header">
                 <div>
-                    <div class="exp-company"><a href="https://www.linkedin.com/company/houzen/" target="_blank">houzen</a></div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=houzen.co.uk&sz=64" alt="houzen" class="company-icon" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23222%22/><text x=%2216%22 y=%2221%22 text-anchor=%22middle%22 fill=%22%2322c55e%22 font-family=%22Inter%22 font-size=%2216%22 font-weight=%22600%22>h</text></svg>'">
+                        <div class="exp-company"><a href="https://www.linkedin.com/company/houzen/" target="_blank">houzen</a></div>
+                    </div>
                     <div class="exp-role">Technology Consultant (Promoted from Intern)</div>
                     <div class="exp-location">London, UK — Remote</div>
                 </div>
@@ -870,7 +908,10 @@
         <div class="edu-card">
             <div class="edu-header">
                 <div>
-                    <div class="edu-school"><a href="http://www.iiitm.ac.in" target="_blank">Indian Institute of Information Technology, Gwalior</a></div>
+                    <div class="exp-company-row">
+                        <img src="https://www.google.com/s2/favicons?domain=iiitm.ac.in&sz=64" alt="IIIT Gwalior" class="company-icon round" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%2216%22 fill=%22%23222%22/><text x=%2216%22 y=%2221%22 text-anchor=%22middle%22 fill=%22%2322c55e%22 font-family=%22Inter%22 font-size=%2213%22 font-weight=%22600%22>IIIT</text></svg>'">
+                        <div class="edu-school"><a href="http://www.iiitm.ac.in" target="_blank">Indian Institute of Information Technology, Gwalior</a></div>
+                    </div>
                     <div class="edu-degree">Integrated Post Graduation (B.Tech + M.Tech) in Information Technology — CGPA: 8/10</div>
                 </div>
                 <div class="edu-date">Jul 2017 — May 2022</div>
