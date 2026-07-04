@@ -11,7 +11,7 @@
     <script>
         (function() {
             var t = localStorage.getItem('theme');
-            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', t);
         })();
     </script>
@@ -115,7 +115,7 @@
     function getPreferredTheme() {
         const stored = localStorage.getItem('theme');
         if (stored) return stored;
-        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
