@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internals of Client-Side DB Sharding — Saket Saumya</title>
+    <meta name="description" content="How client-side sharding works under the hood — shard key routing, bucket mapping, session management, and the open-source bundle powering 25+ teams at PhonePe.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            var t = localStorage.getItem('theme');
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .blog-post { max-width: 100%; }
+        .blog-post h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 40px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .blog-post h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+        .blog-post p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-top: 12px;
+        }
+        .blog-post ul, .blog-post ol {
+            margin-top: 12px;
+            padding-left: 20px;
+        }
+        .blog-post li {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 6px;
+        }
+        .blog-post li strong {
+            color: var(--text-primary);
+        }
+        .blog-post code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            background: var(--tag-bg);
+            border: 1px solid var(--tag-border);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+        }
+        .blog-post pre {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+        .blog-post pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 13px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .blog-post table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+        .blog-post th, .blog-post td {
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-secondary);
+        }
+        .blog-post th {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .blog-post a {
+            color: var(--link);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--link);
+        }
+        .blog-post a:hover {
+            color: var(--link-hover);
+        }
+        .blog-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .blog-post-title {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+        .blog-post blockquote {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 16px;
+        }
+        .blog-post blockquote p {
+            margin-top: 0;
+        }
+        .back-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 32px;
+        }
+        .back-link:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="container">
+        <a href="index.html" class="nav-logo"><span>~/</span>saket13</a>
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="resume.html">Resume</a></li>
+                <li><a href="blog.html" class="active">Blog</a></li>
+                <li><a href="coursework.html">Coursework</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Blog Post -->
+<section class="section">
+    <div class="container">
+        <a href="blog.html" class="back-link">&larr; Back to Blog</a>
+        <div class="blog-post">
+            <div class="blog-meta">19 July 2025</div>
+            <h1 class="blog-post-title">Internals of Client-Side DB Sharding</h1>
+
+            <h2>Problem Statement</h2>
+            <p>Scaling a write-heavy application with a single relational database often leads to bottlenecks:</p>
+            <ul>
+                <li>Maxed-out connection pools</li>
+                <li>High write contention</li>
+                <li>Large, unwieldy tables</li>
+            </ul>
+            <p>Sharding — splitting data across databases — is the long-term fix. But setting it up with Hibernate and Dropwizard is error-prone and complex.</p>
+
+            <h2>Scaling with Application-Level Sharding</h2>
+            <p>As applications grow, especially those that are <strong>write-heavy</strong>, traditional relational databases begin to show limitations:</p>
+            <ul>
+                <li>Connection pool limits get saturated</li>
+                <li>Indexes grow large, affecting performance</li>
+                <li>Write locks and ACID constraints create contention</li>
+                <li>Replication helps reads, but not writes</li>
+            </ul>
+            <p>This is where <strong>sharding</strong> comes in — splitting data horizontally across multiple databases.</p>
+
+            <h2>What is Application-Level Sharding?</h2>
+            <p>Application-level (aka client-side) sharding means the application itself contains the logic to decide <em>which database shard</em> to route a query to. This gives complete control to the app, without relying on a central router or proxy.</p>
+            <p>Typical flow:</p>
+            <ul>
+                <li>App receives request with a sharding key (e.g., userId)</li>
+                <li>App hashes key → gets a logical bucket → maps to a shard</li>
+                <li>Query is routed directly to the correct database instance</li>
+            </ul>
+
+            <h3>Real-World Examples</h3>
+            <ul>
+                <li><strong>Notion:</strong> Client-side routed Postgres shards using document ID as key</li>
+                <li><strong>PayPal:</strong> Uses sharded customer databases with routing logic embedded in services</li>
+                <li><strong>Netflix:</strong> Embeds shard selection logic within microservices for high-throughput use cases</li>
+            </ul>
+
+            <h2>Enter Dropwizard's DB Sharding Bundle</h2>
+            <p>The <code>dropwizard-db-sharding-bundle</code> is a powerful abstraction for implementing application-level sharding in Java services using Hibernate and Dropwizard. It simplifies:</p>
+            <ul>
+                <li>SessionFactory management per shard</li>
+                <li>Routing logic based on sharding key</li>
+                <li>DAO design for top-level (<code>LookupDao</code>) and relational (<code>RelationalDao</code>) entities</li>
+            </ul>
+            <p>Rather than writing boilerplate for shard resolution and session handling, the bundle gives you:</p>
+            <ul>
+                <li>1024 logical buckets mapped via <code>Murmur3</code> hashing</li>
+                <li><code>ShardCalculator</code> + <code>ShardManager</code> to map key → shard</li>
+                <li>Pluggable strategies (Balanced, Legacy, Multi-Tenant)</li>
+            </ul>
+            <p>This brings the power of sharding into your app without overwhelming it with complexity.</p>
+
+            <h2>When to Use It</h2>
+            <p>Application-level sharding via this bundle is great when you:</p>
+            <ul>
+                <li>Have a write-heavy workload and a known shard key (like userId)</li>
+                <li>Want to scale horizontally without changing your ORM logic</li>
+                <li>Need something production-ready, yet lightweight and transparent</li>
+            </ul>
+            <p>As your system grows, you may graduate to service-side sharding, but this bundle provides a rock-solid foundation to get started.</p>
+
+            <h2>Sharding Strategy: Client-side vs Service-side</h2>
+            <p>There are multiple ways to implement sharding in large-scale systems. The <strong>dropwizard-db-sharding-bundle</strong> uses <strong>client-side sharding</strong>, but let's explore both common approaches.</p>
+
+            <h3>1. Client-side Sharding (Used by Dropwizard Bundle)</h3>
+            <ul>
+                <li>Shard routing logic lives inside the application code</li>
+                <li>Each app embeds the shard calculation + routing (via ShardCalculator + ShardManager)</li>
+                <li>No extra network hops — routing is local and fast</li>
+            </ul>
+            <p><strong>Drawbacks:</strong> Difficult to evolve routing rules or support dynamic shards without app redeploys.</p>
+
+            <h3>2. Service-side Sharding</h3>
+            <ul>
+                <li>A dedicated "Shard Router" service determines which shard to use</li>
+                <li>Clients query the service or it acts as a proxy</li>
+                <li>Allows centralized control and coordination</li>
+            </ul>
+            <p><strong>Drawbacks:</strong> Adds an extra network hop and infrastructure complexity.</p>
+
+            <h3>Summary Table</h3>
+            <table>
+                <thead><tr><th>Feature</th><th>Client-side (Dropwizard)</th><th>Service-side Router</th></tr></thead>
+                <tbody>
+                    <tr><td>Routing Location</td><td>Inside application</td><td>External service</td></tr>
+                    <tr><td>Latency</td><td>Very low</td><td>Includes network call</td></tr>
+                    <tr><td>Complexity</td><td>Lower</td><td>Higher</td></tr>
+                    <tr><td>Extensibility</td><td>Limited (needs redeploy)</td><td>Easy (just update service)</td></tr>
+                    <tr><td>Dynamic Shard Support</td><td>No</td><td>Yes</td></tr>
+                    <tr><td>Good For</td><td>Self-contained apps</td><td>Polyglot or multi-team systems</td></tr>
+                </tbody>
+            </table>
+
+            <h2>The Solution: dropwizard-db-sharding-bundle</h2>
+            <p>This Dropwizard bundle abstracts all the pain away. It provides:</p>
+            <ul>
+                <li>Shard definition and connection setup in <code>config.yaml</code></li>
+                <li>Separate Hibernate <code>SessionFactory</code> for each shard</li>
+                <li>Sharding-aware DAOs with automatic routing</li>
+                <li>Multi-tenant and legacy routing support</li>
+            </ul>
+
+            <h2>Lifecycle &amp; Initialization Flow</h2>
+            <ol>
+                <li>Bundle reads shard definitions from YAML</li>
+                <li>Initializes multiple <code>SessionFactory</code> instances</li>
+                <li>Creates a <code>ShardManager</code> and a <code>ShardCalculator</code></li>
+                <li>Registers DAOs and wraps them in MultiTenantDelegates</li>
+                <li>Health checks and admin tasks (e.g., shard blacklisting) are registered</li>
+            </ol>
+
+            <h2>Shard Key Mechanics</h2>
+            <p>The bundle uses Murmur3 hash on a logical key (e.g. userId) to assign one of 1024 logical buckets. These buckets are mapped to physical shards by the <code>ShardManager</code>.</p>
+            <pre><code>@LookupKey
+private String userId; // Key used to hash and find the shard</code></pre>
+
+            <h2>DAO Types Explained</h2>
+            <table>
+                <thead><tr><th>Type</th><th>Use Case</th><th>Sharding Source</th></tr></thead>
+                <tbody>
+                    <tr><td><code>LookupDao</code></td><td>Top-level entities</td><td><code>@LookupKey</code> field</td></tr>
+                    <tr><td><code>RelationalDao</code></td><td>Child/related entities</td><td>Explicit key from parent context</td></tr>
+                    <tr><td><code>Cacheable*</code></td><td>Cached versions of above</td><td>Same as base DAO</td></tr>
+                    <tr><td><code>MultiTenant*</code></td><td>Tenant-aware variant</td><td>Key + tenantId required</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Sample: LookupDao</h3>
+            <pre><code>LookupDao&lt;User&gt; dao = shardingBundle.createParentObjectDao(User.class);
+User user = new User("user123", ...);
+dao.save(user); // Routed to correct shard</code></pre>
+
+            <h3>Sample: RelationalDao</h3>
+            <pre><code>RelationalDao&lt;Order&gt; dao = shardingBundle.createRelatedObjectDao(Order.class);
+dao.save("user123", new Order(...));</code></pre>
+
+            <h2>Internals &amp; Routing Logic</h2>
+            <p>The actual routing occurs inside <code>MultiTenantLookupDao</code> and <code>MultiTenantRelationalDao</code>:</p>
+            <ol>
+                <li>Uses reflection to read the <code>@LookupKey</code></li>
+                <li>Computes bucket via <code>ShardCalculator</code></li>
+                <li>Maps bucket to shard via <code>ShardManager</code></li>
+                <li>Delegates the Hibernate call to the correct DAO</li>
+            </ol>
+
+            <h2>Advanced Capabilities</h2>
+            <ul>
+                <li><strong>Cacheable DAOs:</strong> Pluggable local cache layer</li>
+                <li><strong>Shard Blacklisting:</strong> Temporarily ignore failing shards</li>
+                <li><strong>Custom Calculators:</strong> Implement your own hashing logic</li>
+                <li><strong>Legacy Mode:</strong> Modulo routing (instead of consistent hashing)</li>
+            </ul>
+
+            <h2>Learnings</h2>
+            <ul>
+                <li>Uses delegate pattern internally</li>
+                <li>Highly extensible via generic interfaces</li>
+                <li>Session management fully abstracted</li>
+                <li>Cleanly separates business logic from infra logic</li>
+            </ul>
+
+            <h2>What's Next?</h2>
+            <p>I plan to explore:</p>
+            <ul>
+                <li>Dynamic shard provisioning at runtime</li>
+                <li>Integrating shard-level metrics and dashboards</li>
+                <li>Multi-region sharding strategies</li>
+            </ul>
+
+            <h2>Summary</h2>
+            <table>
+                <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td>Sharding Logic</td><td>1024 buckets hashed via Murmur3</td></tr>
+                    <tr><td>Routing</td><td>ShardCalculator + ShardManager</td></tr>
+                    <tr><td>DAO Variants</td><td>Lookup, Relational, Cacheable, MultiTenant</td></tr>
+                    <tr><td>Config</td><td>Declarative YAML format</td></tr>
+                    <tr><td>Advanced</td><td>Blacklisting, Metrics, Custom Logic</td></tr>
+                </tbody>
+            </table>
+
+            <p>View the code: <a href="https://github.com/santanusinha/dropwizard-db-sharding-bundle">GitHub Repo</a></p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p style="margin-bottom: 8px;">
+            <a href="mailto:saket.iiit@gmail.com">Email</a> &nbsp;&middot;&nbsp;
+            <a href="https://linkedin.com/in/saket13" target="_blank">LinkedIn</a> &nbsp;&middot;&nbsp;
+            <a href="https://github.com/saket13" target="_blank">GitHub</a> &nbsp;&middot;&nbsp;
+            <a href="https://calendly.com/saket13" target="_blank">Calendar</a> &nbsp;&middot;&nbsp;
+            <a href="https://topmate.io/saket13" target="_blank">1:1</a>
+        </p>
+        <p>&copy; 2026 Saket Saumya</p>
+    </div>
+</footer>
+
+<script>
+    function getPreferredTheme() {
+        const stored = localStorage.getItem('theme');
+        if (stored) return stored;
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+    }
+    applyTheme(getPreferredTheme());
+</script>
+
+</body>
+</html>
